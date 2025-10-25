@@ -8,7 +8,7 @@ const cors = require("cors")
 const path = require("path")
 
 dotenv.config()
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3002
 
 const db = require("./config/db")
 
@@ -21,10 +21,14 @@ app.use(express.static(path.join(__dirname, "public")))
 app.use(express.static("public"))
 
 //use router
+const post=require("./routes/post")
+
+app.use("/posts",post)
 
 app.use("/", (req, res) => {
   res.send(`Connected!`)
 })
+
 
 app.listen(PORT, () => {
   console.log(`Running Express server on Port ${PORT} . . .`)

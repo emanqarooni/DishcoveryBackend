@@ -1,4 +1,4 @@
-const {Post}=require("../models")
+const Post=require("../models/Post")
 
 //Get all posts
 const getAllPosts=async(req,res)=>{
@@ -21,7 +21,26 @@ const getPostById=async(req,res)=>{
   }
 }
 
+//Create a new post
+const createPost=async(req,res)=>{
+  try{
+    const ownerId =res.locals.payload.id // user id from token
+    const image=req.file?`/uploads/${req.file.filename}`:null
+
+    const newPost=await Post.create({
+      image,
+      description:req.body.description,
+      owner:ownerId,
+    })
+
+    res.status(200).send(newPost)
+  }catch(error){
+    res.status(500).send({msg:"Error creating post!",error})
+  }
+}
+
 module.exports={
   getAllPosts,
   getPostById,
+  createPost,
 }
