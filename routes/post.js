@@ -9,8 +9,10 @@ const upload = require("../middleware/upload")
 router.get("/",post.getAllPosts)
 //View single post
 router.get("/:id",post.getPostById)
-// Add new post (protected)
+// Add new post
 router.post("/", stripToken, verifyToken, upload.single("image"), post.createPost)
+//Delete post
+router.delete("/:id",stripToken, verifyToken, post.deletePost)
 
 
 module.exports=router

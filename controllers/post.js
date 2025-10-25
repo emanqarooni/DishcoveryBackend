@@ -39,8 +39,25 @@ const createPost=async(req,res)=>{
   }
 }
 
+//Delete post
+const deletePost=async(req,res)=>{
+  try{
+    const post=await Post.findById(req.params.id)
+    if(!post) return res.status(404).send({msg:"Post not found!"})
+
+      if(post.owner.toString()!== res.locals.payload.id){
+        return res.status(403).send({msg:"Not authorized!"})
+      }
+      await post.deleteOne()
+      res.status(200).send({ msg: "Post deleted successfully!" })
+      } catch (error) {
+        res.status(500).send({ msg: "Error deleting post!", error })
+  }
+}
+
 module.exports={
   getAllPosts,
   getPostById,
   createPost,
+  deletePost,
 }
