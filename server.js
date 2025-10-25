@@ -23,11 +23,12 @@ app.use(express.static("public"))
 //require router
 const authRouter = require("./routes/auth")
 const post=require("./routes/post")
+const comment=require("./routes/comment")
 
 //use router
 app.use("/auth", authRouter)
-
 app.use("/posts",post)
+app.use("/comment",comment)
 
 app.use("/", (req, res) => {
   res.send(`Connected!`)

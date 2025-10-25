@@ -1,12 +1,9 @@
 const Post=require("../models/Post")
-const Comment=require("../models/Comment")
-const path = require("path")
 
 //Get all posts
 const getAllPosts=async(req,res)=>{
   try{
     const posts=await Post.find({}).populate("owner","username email")
-    .populate({path:"comments",populate:{path:"owner",select:"username email"}})
     res.status(200).send(posts)
   }catch(error){
     res.status(500).send({msg:"Error getting all posts!",error})
@@ -17,7 +14,6 @@ const getAllPosts=async(req,res)=>{
 const getPostById=async(req,res)=>{
   try{
     const post=await Post.findById(req.params.id).populate("owner","username email")
-     .populate({path:"comments",populate:{path:"owner",select:"username email"}})
     if(!post) return res.status(404).send({msg:"Post not found !"})
       res.status(200).send(post)
   }catch(error){
@@ -30,7 +26,6 @@ const createPost=async(req,res)=>{
   try{
     const ownerId =res.locals.payload.id // user id from token
     const image=req.file?`/uploads/${req.file.filename}`:null
-    const {description,comment}=req.body
 
     const newPost=await Post.create({
       image,
@@ -38,24 +33,7 @@ const createPost=async(req,res)=>{
       owner:ownerId,
     })
 
-    if (comment) {
-      const newComment = await Comment.create({
-        owner: ownerId,
-        comment,
-      })
-
-      newPost.comments.push(newComment._id);
-      await newPost.save()
-    }
-
-    const populatedPost = await Post.findById(newPost._id)
-      .populate("owner", "username email")
-      .populate({
-        path: "comments",
-        populate: { path: "owner", select: "username email" }
-      })
-
-    res.status(200).send(populatedPost)
+    res.status(200).send(newPost)
   }catch(error){
     res.status(500).send({msg:"Error creating post!",error})
   }
