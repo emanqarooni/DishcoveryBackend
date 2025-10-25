@@ -1,10 +1,22 @@
 const Rating = require("../models/Rating")
 
+exports.getRating = async (req, res) => {
+  try {
+    const ratings = await Rating.find()
+    res.status(200).json(ratings)
+  } catch (error) {
+    res.status(500).json({ msg: "Error fetching ratings", error })
+  }
+}
+
 exports.createRating = async (req, res) => {
   try {
-    req.body.recipeId = req.params.recipeId
-    req.body.userId = req.params.userId
-    const newRating = await Rating.create(req.body)
+    const rating = {
+      ...req.body,
+      recipeId: req.params.recipeId,
+      userId: req.user.id,
+    }
+    const newRating = await Rating.create(rating)
     res.json(newRating)
   } catch (error) {
     res.status(500).send({ msg: "Error creating new rating!", error })
@@ -13,12 +25,12 @@ exports.createRating = async (req, res) => {
 
 exports.updateRating = async (req, res) => {
   try {
-    req.body.recipeId = req.params.recipeId
-    req.body.userId = req.params.userId
+    const rating = await Rating.findById(req.params.ratingId)
+
     const updateRating = await Rating.findByIdAndUpdate(
       req.params.ratingId,
       req.body,
-      {new: true}
+      { new: true }
     )
     res.status(200).send(updateRating)
   } catch (error) {

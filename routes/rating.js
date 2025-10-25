@@ -1,8 +1,9 @@
-const router = require('express').Router()
-const ratingCtrl = require('../controllers/rating')
+const router = require("express").Router()
+const ratingCtrl = require("../controllers/rating")
 
-router.get('/:recipeId/:userId',ratingCtrl.createRating)
-router.put('/recipeId/:userId/:ratingId',ratingCtrl.updateRating)
-router.put('/recipeId/:ratingId',ratingCtrl.deleteRating)
+router.get("/", ratingCtrl.getRating)
+router.post("/:recipeId", ratingCtrl.createRating)
+router.put("/:recipeId/:ratingId", ratingCtrl.updateRating)
+router.delete("/:recipeId/:ratingId", ratingCtrl.deleteRating)
 
 module.exports = router
