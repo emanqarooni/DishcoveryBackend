@@ -52,6 +52,7 @@ const recipeSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
+    ratings: [{type: mongoose.Schema.Types.ObjectId, ref: 'Rating'}]
   },
   {
     timestamps: true, //createdAt, updatedAt
