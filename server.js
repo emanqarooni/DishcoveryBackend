@@ -20,8 +20,12 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, "public")))
 app.use(express.static("public"))
 
-//use router
+//require router
+const authRouter = require("./routes/auth")
 const post=require("./routes/post")
+
+//use router
+app.use("/auth", authRouter)
 
 app.use("/posts",post)
 
