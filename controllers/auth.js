@@ -19,7 +19,7 @@ const validateEmail = (email) => {
 const Register = async (req, res) => {
   try {
     // Extracts the necessary fields from the request body
-    const { email, password, confirmPassword, username } = req.body
+    const { email, password, confirmPassword, username, gender } = req.body
 
     //check if passwords match
     if (password !== confirmPassword) {
@@ -52,10 +52,10 @@ const Register = async (req, res) => {
 
     let imagePath
 
-    if (req.file) {
-      imagePath = `/uploads/${req.file.filename}`
+    if (gender === "female") {
+      imagePath = `/uploads/default_female.png`
     } else {
-      imagePath = `/uploads/default.png`
+      imagePath = `/uploads/default_male.png`
     }
 
     // Checks if there has already been a user registered with that email
@@ -70,6 +70,7 @@ const Register = async (req, res) => {
         username,
         email,
         password: hashedPassword,
+        gender,
         image: imagePath,
       })
       // Sends the user as a response
