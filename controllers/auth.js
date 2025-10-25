@@ -50,6 +50,14 @@ const Register = async (req, res) => {
         .send("A user with that username has already been registered!")
     }
 
+    let imagePath
+
+    if (req.file) {
+      imagePath = `/uploads/${req.file.filename}`
+    } else {
+      imagePath = `/uploads/default.png`
+    }
+
     // Checks if there has already been a user registered with that email
     let existingUser = await user.exists({ email })
     if (existingUser) {
@@ -62,6 +70,7 @@ const Register = async (req, res) => {
         username,
         email,
         password: hashedPassword,
+        image: imagePath,
       })
       // Sends the user as a response
       res.status(200).send(newUser)
