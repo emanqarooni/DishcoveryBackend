@@ -4,6 +4,7 @@ const crypto = require("crypto")
 const transporter = require("../config/nodemailer")
 const bcrypt = require("bcrypt")
 
+//this function is for pass validation
 const validatePassword = (password) => {
   const passwordCheck = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/ //password checks for at least 8 chars long, 1 lowercase, 1 uppercase, and 1 special char
   return passwordCheck.test(password)
@@ -13,6 +14,15 @@ const Register = async (req, res) => {
   try {
     // Extracts the necessary fields from the request body
     const { email, password, username } = req.body
+
+    //vaildate pass before hashing
+    if (!validatePassword(password)) {
+      return res.status(400).json({
+        error:
+          "Password must be at least 8 characters long and include one uppercase letter, one lowercase letter, and one special character.",
+      })
+    }
+
     // Hashes the provided password
     let hashedPassword = await middleware.hashPassword(password)
     // Checks if there has already been a user registered with that email
@@ -75,6 +85,13 @@ const UpdatePassword = async (req, res) => {
       oldPassword,
       findUser.password
     )
+    //validate pass before hash and updating
+    if (!validatePassword(newPassword)) {
+      return res.status(400).json({
+        error:
+          "Password must be at least 8 characters long and include one uppercase letter, one lowercase letter, and one special character.",
+      })
+    }
     // If they match, hashes the new password, updates the db with the new digest, then sends the user as a response
     if (matched) {
       let password = await middleware.hashPassword(newPassword)
@@ -158,6 +175,14 @@ const ResetPassword = async (req, res) => {
 
     if (password !== confirmPassword) {
       return res.status(400).json({ error: "Passwords do not match" })
+    }
+
+    //validate pass before hashing and resetting
+    if (!validatePassword(password)) {
+      return res.status(400).json({
+        error:
+          "Password must be at least 8 characters long and include one uppercase letter, one lowercase letter, and one special character.",
+      })
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)
