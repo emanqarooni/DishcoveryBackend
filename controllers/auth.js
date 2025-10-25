@@ -184,7 +184,7 @@ const ForgetPassword = async (req, res) => {
     findUser.resetPasswordExpires = Date.now() + 3600000 // 1 hour
     await findUser.save()
 
-    const resetLink = `http://localhost:3000/auth/reset/${token}`
+    const resetLink = `http://localhost:3002/auth/reset/${token}`
 
     await transporter.sendMail({
       from: process.env.EMAIL_USER,

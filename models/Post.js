@@ -14,10 +14,10 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    commentId: {
+    comments: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Comment",
-    },
+    }],
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

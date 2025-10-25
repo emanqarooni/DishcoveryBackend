@@ -18,7 +18,3 @@ router.post("/:id/like", stripToken, verifyToken, post.likePost)
 
 module.exports=router
 
-
-
-
-
