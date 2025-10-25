@@ -20,7 +20,11 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, "public")))
 app.use(express.static("public"))
 
+//require router
+const authRouter = require("./routes/auth")
+
 //use router
+app.use("/auth", authRouter)
 
 app.use("/", (req, res) => {
   res.send(`Connected!`)
