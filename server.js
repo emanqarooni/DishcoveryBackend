@@ -23,10 +23,12 @@ app.use(express.static("public"))
 //require router
 const authRouter = require("./routes/auth")
 const recipeRouter = require("./routes/recipe")
+const ratingRouter = require("./routes/rating")
 
 //use router
 app.use("/auth", authRouter)
 app.use("/recipe", recipeRouter)
+app.use("/rating", ratingRouter)
 
 app.use("/", (req, res) => {
   res.send(`Connected!`)
