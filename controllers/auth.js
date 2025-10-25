@@ -19,7 +19,12 @@ const validateEmail = (email) => {
 const Register = async (req, res) => {
   try {
     // Extracts the necessary fields from the request body
-    const { email, password, username } = req.body
+    const { email, password, confirmPassword, username } = req.body
+
+    //check if passwords match
+    if (password !== confirmPassword) {
+      return res.status(400).json({ error: "Passwords do not match." })
+    }
 
     //val for email before registering
     if (!validateEmail(email)) {
@@ -36,6 +41,15 @@ const Register = async (req, res) => {
 
     // Hashes the provided password
     let hashedPassword = await middleware.hashPassword(password)
+
+    // Check if a user already exists with the same username
+    let existingUsername = await user.exists({ username })
+    if (existingUsername) {
+      return res
+        .status(400)
+        .send("A user with that username has already been registered!")
+    }
+
     // Checks if there has already been a user registered with that email
     let existingUser = await user.exists({ email })
     if (existingUser) {
@@ -76,19 +90,17 @@ const Login = async (req, res) => {
       let token = middleware.createToken(payload)
       return res.status(200).send({ user: payload, token })
     }
-    res.status(401).send({ status: "Error", msg: "Unauthorized" })
+    res.status(401).send({ status: "Error", msg: "Invalid Credential" })
   } catch (error) {
     console.log(error)
-    res
-      .status(401)
-      .send({ status: "Error", msg: "An error has occurred logging in!" })
+    res.status(401).send({ status: "Error", msg: "Email does not exist" })
   }
 }
 
 const UpdatePassword = async (req, res) => {
   try {
     // Extracts the necessary fields from the request body
-    const { oldPassword, newPassword } = req.body
+    const { oldPassword, newPassword, confirmPassword } = req.body
     // Finds a user by a particular field (in this case, the user's id from the URL param)
     let findUser = await user.findById(req.params.id)
     // Checks if the password matches the stored digest
@@ -96,12 +108,25 @@ const UpdatePassword = async (req, res) => {
       oldPassword,
       findUser.password
     )
+
+    //if the pass that is written does not match the old pass
+    if (!matched) {
+      return res
+        .status(401)
+        .send({ status: "Error", msg: "Old password did not match!" })
+    }
+
     //validate pass before hash and updating
     if (!validatePassword(newPassword)) {
       return res.status(400).json({
         error:
           "Password must be at least 8 characters long and include one uppercase letter, one lowercase letter, and one special character.",
       })
+    }
+
+    // Check confirm password
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ error: "New passwords do not match." })
     }
     // If they match, hashes the new password, updates the db with the new digest, then sends the user as a response
     if (matched) {
