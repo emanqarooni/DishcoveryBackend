@@ -10,10 +10,21 @@ const validatePassword = (password) => {
   return passwordCheck.test(password)
 }
 
+//func for email val
+const validateEmail = (email) => {
+  const emailCheck = /^[a-zA-Z0-9._%+-]+@gmail\.com$/ //only gmail is allowed
+  return emailCheck.test(email)
+}
+
 const Register = async (req, res) => {
   try {
     // Extracts the necessary fields from the request body
     const { email, password, username } = req.body
+
+    //val for email before registering
+    if (!validateEmail(email)) {
+      return res.status(400).json({ error: "Please enter a gmail address." })
+    }
 
     //vaildate pass before hashing
     if (!validatePassword(password)) {
