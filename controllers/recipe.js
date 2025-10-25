@@ -2,7 +2,16 @@ const Recipe = require("../models/Recipe")
 
 exports.getRecipe = async (req, res) => {
   try {
-    const recipe = await Recipe.find({}).populate("ratings")
+    const recipe = await Recipe.find({})
+    res.status(200).send(recipe)
+  } catch (error) {
+    res.status(500).send({ msg: "Error fetching recipe!", error })
+  }
+}
+
+exports.getDetails = async (req, res) => {
+  try {
+    const recipe = await Recipe.findById(req.params.id).populate("ratings")
     res.status(200).send(recipe)
   } catch (error) {
     res.status(500).send({ msg: "Error fetching recipe!", error })
@@ -11,7 +20,7 @@ exports.getRecipe = async (req, res) => {
 
 exports.createRecipe = async (req, res) => {
   try {
-    const image = req.file ? `uploads/${req.file.filename}` : ""
+    const image = req.file ? `uploads/${req.file.filename}` : req.body.image
     const newRecipe = await Recipe.create({ ...req.body, image: image })
     res.json(newRecipe)
   } catch (error) {
@@ -30,7 +39,11 @@ exports.deleteRecipe = async (req, res) => {
 
 exports.updateRecipe = async (req, res) => {
   try {
-    const recipe = await Recipe.findByIdAndUpdate( req.params.recipeId, req.body, {new:true} )
+    const recipe = await Recipe.findByIdAndUpdate(
+      req.params.recipeId,
+      req.body,
+      { new: true }
+    )
     res.status(200).send(recipe)
   } catch (error) {
     res.status(500).send({ msg: "Error updating the recipe!", error })
