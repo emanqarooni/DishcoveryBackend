@@ -6,9 +6,9 @@ const { stripToken, verifyToken } = require("../middleware/index")
 const upload = require("../middleware/upload")
 
 //View all posts
-router.get("/",post.getAllPosts)
+router.get("/", stripToken, verifyToken, post.getAllPosts)
 //View single post
-router.get("/:id",post.getPostById)
+router.get("/:id", stripToken, verifyToken,post.getPostById)
 // Add new post
 router.post("/", stripToken, verifyToken, upload.single("image"), post.createPost)
 //Delete post
