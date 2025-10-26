@@ -20,25 +20,56 @@ exports.getDetails = async (req, res) => {
   }
 }
 
-exports.favRecipe = async (req, res) => {
+exports.toggleFavRecipe = async (req, res) => {
   try {
-    await Recipe.findByIdAndUpdate(req.params.recipeId, {
-      $push: { favouritedByUsers: req.body.userId },
-    })
+    const userId = res.locals.payload.id
+    const recipe = await Recipe.findById(req.params.recipeId)
+
+    if (!recipe) {
+      return res.status(404).send({ msg: "Recipe not found!" })
+    }
+
+    const alreadyFavorited = recipe.favouritedByUsers.includes(userId)
+
+    if (alreadyFavorited) {
+      recipe.favouritedByUsers.pull(userId)
+      await recipe.save()
+      return res.status(200).send({
+        msg: "Recipe removed from favorites!",
+        isFavorited: false,
+        favoritesCount: recipe.favouritedByUsers.length,
+      })
+    } else {
+      recipe.favouritedByUsers.push(userId)
+      await recipe.save()
+      return res.status(200).send({
+        msg: "Recipe added to favorites!",
+        isFavorited: true,
+        favoritesCount: recipe.favouritedByUsers.length,
+      })
+    }
   } catch (error) {
     res.status(500).send({ msg: "Error adding recipe to fav list!", error })
   }
 }
 
-exports.favRecipeDelete = async (req, res) => {
+exports.checkFavStatus = async (req, res) => {
   try {
-    await Recipe.findByIdAndUpdate(req.params.recipeId, {
-      $pull: { favouritedByUsers: req.body.userId },
-    })
+    const userId = res.locals.payload.id
+    const recipe = await Recipe.findById(req.params.recipeId)
 
-    await Rating.deleteOne({ _id: req.body.userId })
+    if (!recipe) {
+      return res.status(404).send({ msg: "Recipe not found!" })
+    }
+
+    const isFavorited = recipe.favouritedByUsers.includes(userId)
+
+    res.status(200).send({
+      isFavorited,
+      favoritesCount: recipe.favouritedByUsers.length,
+    })
   } catch (error) {
-    res.status(500).send({ msg: "Error adding recipe to fav list!", error })
+    res.status(500).send({ msg: "Error checking favorite status!", error })
   }
 }
 
