@@ -8,15 +8,14 @@ const getAllPosts = async (req, res) => {
     const posts = await Post.find({})
       .populate("owner", "username email")
       .populate({ path: "comments", populate: { path: "owner", select: "username email" } })
-
-    const userId = res.locals.payload?.id
-    const postsWithLikesCount = posts.map(post => {
-      const obj = post.toObject()
-      obj.likesCount = post.likes.length
+      const userId = res.locals.payload?.id
+      const postsWithLikesCount = posts.map(post => {
+        const obj = post.toObject()
+        obj.likesCount = post.likes.length
         obj.likedByUser = userId ? post.likes.some(id=>id.toString()===userId) : false
-      delete obj.likes
-      return obj
-    })
+        delete obj.likes
+        return obj
+      })
 
     res.status(200).send(postsWithLikesCount)
   } catch (error) {
@@ -27,7 +26,7 @@ const getAllPosts = async (req, res) => {
 //Get single post by id
 const getPostById = async (req, res) => {
   try {
-    const userId = res.locals.payload?.id
+    const userId = res.locals.payload.id
 
     const post = await Post.findById(req.params.id)
       .populate("owner", "username email")

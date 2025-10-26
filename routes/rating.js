@@ -1,7 +1,6 @@
 const router = require("express").Router()
 const ratingCtrl = require("../controllers/rating")
 const middleware = require("../middleware")
-
 router.get(
   "/:recipeId",
   middleware.stripToken,
@@ -26,5 +25,4 @@ router.delete(
   middleware.verifyToken,
   ratingCtrl.deleteRating
 )
-
 module.exports = router
