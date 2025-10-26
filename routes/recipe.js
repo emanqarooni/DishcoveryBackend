@@ -3,11 +3,37 @@ const recipeCtrl = require("../controllers/recipe")
 const upload = require("../middleware/upload")
 const middleware = require("../middleware")
 
-router.get("/", recipeCtrl.getRecipe)
-router.get("/:recipeId", recipeCtrl.getDetails)
-router.post("/createRecipe", upload.single("image"), recipeCtrl.createRecipe)
-router.put("/:recipeId", recipeCtrl.updateRecipe)
-router.delete("/:recipeId", recipeCtrl.deleteRecipe)
+router.get(
+  "/",
+  middleware.stripToken,
+  middleware.verifyToken,
+  recipeCtrl.getRecipe
+)
+router.get(
+  "/:recipeId",
+  middleware.stripToken,
+  middleware.verifyToken,
+  recipeCtrl.getDetails
+)
+router.post(
+  "/createRecipe",
+  middleware.stripToken,
+  middleware.verifyToken,
+  upload.single("image"),
+  recipeCtrl.createRecipe
+)
+router.put(
+  "/:recipeId",
+  middleware.stripToken,
+  middleware.verifyToken,
+  recipeCtrl.updateRecipe
+)
+router.delete(
+  "/:recipeId",
+  middleware.stripToken,
+  middleware.verifyToken,
+  recipeCtrl.deleteRecipe
+)
 
 router.post(
   "/:recipeId/toggleFav",
