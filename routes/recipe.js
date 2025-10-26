@@ -41,12 +41,10 @@ router.post(
   middleware.verifyToken,
   recipeCtrl.toggleFavRecipe
 )
-
 router.get(
   "/:recipeId/favStatus",
   middleware.stripToken,
   middleware.verifyToken,
   recipeCtrl.checkFavStatus
 )
-
 module.exports = router
