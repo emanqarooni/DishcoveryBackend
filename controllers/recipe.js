@@ -23,7 +23,7 @@ exports.getDetails = async (req, res) => {
 exports.favRecipe = async (req, res) => {
   try {
     await Recipe.findByIdAndUpdate(req.params.recipeId, {
-      $push: { favouritedByUsers: req.body.userId},
+      $push: { favouritedByUsers: req.body.userId },
     })
   } catch (error) {
     res.status(500).send({ msg: "Error adding recipe to fav list!", error })
