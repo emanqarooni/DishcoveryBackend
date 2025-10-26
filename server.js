@@ -25,16 +25,21 @@ const authRouter = require("./routes/auth")
 const userRouter = require("./routes/user")
 const recipeRouter = require("./routes/recipe")
 const ratingRouter = require("./routes/rating")
+const post=require("./routes/post")
+const comment=require("./routes/comment")
 
 //use router
 app.use("/auth", authRouter)
 app.use("/users", userRouter)
 app.use("/recipe", recipeRouter)
 app.use("/rating", ratingRouter)
+app.use("/posts",post)
+app.use("/comment",comment)
 
 app.use("/", (req, res) => {
   res.send(`Connected!`)
 })
+
 
 app.listen(PORT, () => {
   console.log(`Running Express server on Port ${PORT} . . .`)

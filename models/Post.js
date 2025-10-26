@@ -1,5 +1,4 @@
 const mongoose = require("mongoose")
-
 const postSchema = new mongoose.Schema(
   {
     likes: [
@@ -35,6 +34,5 @@ const postSchema = new mongoose.Schema(
     timestamps: true, //createdAt, updatedAt
   }
 )
-
 const Post = mongoose.model("Post", postSchema)
 module.exports = Post
