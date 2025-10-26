@@ -25,6 +25,10 @@ const postSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    rating: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Rating",
+    },
   },
   {
     timestamps: true, //createdAt, updatedAt
