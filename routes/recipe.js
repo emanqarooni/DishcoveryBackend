@@ -8,4 +8,7 @@ router.post('/createRecipe',upload.single('image'),recipeCtrl.createRecipe)
 router.put('/:recipeId',recipeCtrl.updateRecipe)
 router.delete('/:recipeId', recipeCtrl.deleteRecipe)
 
+router.post('/:recipeId/addFav' ,recipeCtrl.favRecipe)
+router.delete('/:recipeId/deleteFav', recipeCtrl.favRecipeDelete)
+
 module.exports = router
