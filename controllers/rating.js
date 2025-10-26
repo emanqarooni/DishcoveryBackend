@@ -3,7 +3,7 @@ const Recipe = require("../models/Recipe")
 
 exports.getRating = async (req, res) => {
   try {
-    const ratings = await Rating.find()
+    const ratings = await Rating.find({ recipeId: req.params.recipeId })
     res.status(200).json(ratings)
   } catch (error) {
     res.status(500).json({ msg: "Error fetching ratings", error })
