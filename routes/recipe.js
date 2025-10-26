@@ -1,7 +1,6 @@
 const router = require("express").Router()
 const recipeCtrl = require("../controllers/recipe")
 const upload = require("../middleware/upload")
-const middleware = require("../middleware")
 
 router.get("/", recipeCtrl.getRecipe)
 router.get("/:recipeId", recipeCtrl.getDetails)
