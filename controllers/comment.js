@@ -40,13 +40,34 @@ const editComment=async(req,res)=>{
 
     const populatedComment = await Comment.findById(existingComment._id).populate("owner", "username email")
 
-      res.status(200).send(populatedComment)
+  res.status(200).send(populatedComment)
   }catch(error){
     res.status(500).send({msg:"Error editing comment!", error})
+  }
+}
+
+//Delete a comment
+const deleteComment=async(req,res)=>{
+  try{
+    const commentId=req.params.id
+    const userId=res.locals.payload.id
+
+    const existingComment=await Comment.findById(commentId)
+    if(!existingComment) return res.status(404).send({msg: "Comment not found!"})
+
+    if(existingComment.owner.toString() !== userId)
+    return res.res.status(403).send({msg: "Not authorized!"})
+
+     await existingComment.deleteOne()
+
+    res.status(200).send({msg:"Comment deleted successfully!"});
+  } catch (error) {
+    res.status(500).send({msg:"Error deleting comment!", error});
   }
 }
 
 module.exports={
   addComment,
   editComment,
+  deleteComment
 }

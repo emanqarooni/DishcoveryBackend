@@ -58,15 +58,29 @@ const deletePost=async(req,res)=>{
 //Like post
 const likePost=async(req,res)=>{
   try{
+    const userId = res.locals.payload.id;
+    console.log("User ID from token:", userId);
+
     const post=await Post.findById(req.params.id)
-    if(!post)return res.status(404).send({ msg: "Post not found!" })
+    if(!post){
+      console.log("Post not found with id:", req.params.id)
+      return res.status(404).send({ msg: "Post not found!" })
+    }
 
-      post.likes +=1
+      const alreadyLiked = post.likes.includes(userId)
+
+   if (alreadyLiked) {
+      post.likes.pull(userId)
       await post.save()
-
-      res.status(200).send({ msg: "Post liked!", likes: post.likes })
-    } catch (error) {
-    res.status(500).send({ msg: "Error liking post!", error })
+      console.log("Post unliked successfully")
+      return res.status(200).send({ msg: "Post unliked!", likes: post.likes.length })
+    } else {
+      post.likes.push(userId)
+      await post.save()
+      return res.status(200).send({ msg: "Post liked!", likes: post.likes.length })
+    }
+  } catch (error) {
+    res.status(500).send({msg:"Error liking post!",error })
   }
   }
 
