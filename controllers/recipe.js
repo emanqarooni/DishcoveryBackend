@@ -11,10 +11,34 @@ exports.getRecipe = async (req, res) => {
 
 exports.getDetails = async (req, res) => {
   try {
-    const recipe = await Recipe.findById(req.params.id).populate("ratings")
+    const recipe = await Recipe.findById(req.params.recipeId).populate(
+      "ratings"
+    )
     res.status(200).send(recipe)
   } catch (error) {
     res.status(500).send({ msg: "Error fetching recipe!", error })
+  }
+}
+
+exports.favRecipe = async (req, res) => {
+  try {
+    await Recipe.findByIdAndUpdate(req.params.recipeId, {
+      $push: { favouritedByUsers: req.body.userId},
+    })
+  } catch (error) {
+    res.status(500).send({ msg: "Error adding recipe to fav list!", error })
+  }
+}
+
+exports.favRecipeDelete = async (req, res) => {
+  try {
+    await Recipe.findByIdAndUpdate(req.params.recipeId, {
+      $pull: { favouritedByUsers: req.body.userId },
+    })
+
+    await Rating.deleteOne({ _id: req.body.userId })
+  } catch (error) {
+    res.status(500).send({ msg: "Error adding recipe to fav list!", error })
   }
 }
 
