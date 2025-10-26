@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 3000
 
 const db = require("./config/db")
 
+
 //use app
 app.use(logger("dev"))
 app.use(cors())
@@ -22,6 +23,7 @@ app.use(express.static("public"))
 
 //require router
 const authRouter = require("./routes/auth")
+<<<<<<< HEAD
 const userRouter = require("./routes/user")
 const recipeRouter = require("./routes/recipe")
 
@@ -29,6 +31,15 @@ const recipeRouter = require("./routes/recipe")
 app.use("/auth", authRouter)
 app.use("/users", userRouter)
 app.use("/recipe", recipeRouter)
+=======
+const recipeRouter = require("./routes/recipe")
+const ratingRouter = require("./routes/rating")
+
+//use router
+app.use("/auth", authRouter)
+app.use("/recipe", recipeRouter)
+app.use("/rating", ratingRouter)
+>>>>>>> 20308ea5f62436c0369c490992da8bac85146f4a
 
 app.use("/", (req, res) => {
   res.send(`Connected!`)

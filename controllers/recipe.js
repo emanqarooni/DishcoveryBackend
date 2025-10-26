@@ -20,6 +20,7 @@ exports.getDetails = async (req, res) => {
   }
 }
 
+<<<<<<< HEAD
 exports.toggleFavRecipe = async (req, res) => {
   try {
     const userId = res.locals.payload.id
@@ -70,6 +71,27 @@ exports.checkFavStatus = async (req, res) => {
     })
   } catch (error) {
     res.status(500).send({ msg: "Error checking favorite status!", error })
+=======
+exports.favRecipe = async (req, res) => {
+  try {
+    await Recipe.findByIdAndUpdate(req.params.recipeId, {
+      $push: { favouritedByUsers: req.body.userId},
+    })
+  } catch (error) {
+    res.status(500).send({ msg: "Error adding recipe to fav list!", error })
+  }
+}
+
+exports.favRecipeDelete = async (req, res) => {
+  try {
+    await Recipe.findByIdAndUpdate(req.params.recipeId, {
+      $pull: { favouritedByUsers: req.body.userId },
+    })
+
+    await Rating.deleteOne({ _id: req.body.userId })
+  } catch (error) {
+    res.status(500).send({ msg: "Error adding recipe to fav list!", error })
+>>>>>>> 20308ea5f62436c0369c490992da8bac85146f4a
   }
 }
 
