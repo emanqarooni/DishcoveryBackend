@@ -93,7 +93,7 @@ const Login = async (req, res) => {
     if (matched) {
       let payload = {
         id: findUser._id,
-        name: findUser.name,
+        username: findUser.username,
         email: findUser.email,
       }
       // Creates our JWT and packages it with our payload to send as a response
