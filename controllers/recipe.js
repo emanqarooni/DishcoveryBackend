@@ -75,8 +75,16 @@ exports.checkFavStatus = async (req, res) => {
 
 exports.createRecipe = async (req, res) => {
   try {
+    const userId = res.locals.payload.id
+
     const image = req.file ? `uploads/${req.file.filename}` : req.body.image
-    const newRecipe = await Recipe.create({ ...req.body, image: image })
+
+    const newRecipe = await Recipe.create({
+      ...req.body,
+      image: image,
+      user: userId,
+    })
+
     res.json(newRecipe)
   } catch (error) {
     res.status(500).send({ msg: "Error creating new recipe!", error })
