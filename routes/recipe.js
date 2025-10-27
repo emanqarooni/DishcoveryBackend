@@ -34,7 +34,6 @@ router.delete(
   middleware.verifyToken,
   recipeCtrl.deleteRecipe
 )
-
 router.post(
   "/:recipeId/toggleFav",
   middleware.stripToken,
