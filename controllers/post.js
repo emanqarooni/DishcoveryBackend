@@ -8,6 +8,7 @@ const getAllPosts = async (req, res) => {
     const posts = await Post.find({})
       .populate("owner", "username email")
       .populate({ path: "comments", populate: { path: "owner", select: "username email" } })
+      
       const userId = res.locals.payload?.id
       const postsWithLikesCount = posts.map(post => {
         const obj = post.toObject()
