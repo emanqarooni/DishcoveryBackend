@@ -53,9 +53,9 @@ const Register = async (req, res) => {
     let imagePath
 
     if (gender === "female") {
-      imagePath = `/uploads/default_female.png`
+      imagePath = `/images/default_female.jpg`
     } else {
-      imagePath = `/uploads/default_male.png`
+      imagePath = `/images/default_male.jpg`
     }
 
     // Checks if there has already been a user registered with that email
