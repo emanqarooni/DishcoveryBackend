@@ -9,6 +9,14 @@ router.get(
   middleware.verifyToken,
   recipeCtrl.getRecipe
 )
+
+router.get(
+  "/myRecipes",
+  middleware.stripToken,
+  middleware.verifyToken,
+  recipeCtrl.getUserRecipes
+)
+
 router.get(
   "/:recipeId",
   middleware.stripToken,
