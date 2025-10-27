@@ -14,7 +14,7 @@ const recipeSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    owner: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
