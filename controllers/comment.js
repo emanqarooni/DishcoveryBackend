@@ -11,22 +11,11 @@ const addComment = async (req, res) => {
       if (!commentText)
       return res.status(400).send({ msg: "Comment text is required!" })
 
-      const newComment = await Comment.create({
-      owner: userId,
-      comment: commentText,
-      postId: postId
+      const newComment = await Comment.create({ owner: userId,comment: commentText,postId: postId})
+      await Post.findByIdAndUpdate(postId,{$push:{comments:newComment._id}
     })
-    await Post.findByIdAndUpdate(postId,{
-      $push:{comments:newComment._id}
-    })
-      const populatedComment = await Comment.findById(newComment._id).populate(
-      "owner",
-      "username email"
-    )
-      res.status(200).send({
-      msg: "Comment added successfully!",
-      comment: populatedComment,
-    })
+      const populatedComment = await Comment.findById(newComment._id).populate("owner","username email")
+      res.status(200).send({msg: "Comment added successfully!",comment: populatedComment,})
   } catch (error) {
     console.error("Error adding comment:", error)
     res.status(500).send({ msg: "Error adding comment!", error: error.message })
