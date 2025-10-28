@@ -168,7 +168,10 @@ const UpdatePassword = async (req, res) => {
 
 const CheckSession = async (req, res) => {
   const { payload } = res.locals
-  res.status(200).send(payload)
+  const currentUser = await user
+    .findById(payload.id)
+    .select("username email image gender")
+  res.status(200).send(currentUser)
 }
 
 const ForgetPassword = async (req, res) => {
