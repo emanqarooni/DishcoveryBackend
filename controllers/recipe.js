@@ -3,6 +3,8 @@ const Recipe = require("../models/Recipe")
 exports.getRecipe = async (req, res) => {
   try {
     const recipe = await Recipe.find({})
+      .populate("user", "username email image") // Add this to populate user info
+      .populate("ratings")
     res.status(200).send(recipe)
   } catch (error) {
     res.status(500).send({ msg: "Error fetching recipe!", error })
@@ -13,6 +15,8 @@ exports.getUserRecipes = async (req, res) => {
   try {
     const userId = res.locals.payload.id
     const recipes = await Recipe.find({ user: userId })
+      .populate("user", "username email image") // Add this
+      .populate("ratings")
 
     res.status(200).send(recipes)
   } catch (error) {
@@ -20,12 +24,11 @@ exports.getUserRecipes = async (req, res) => {
   }
 }
 
-
 exports.getDetails = async (req, res) => {
   try {
-    const recipe = await Recipe.findById(req.params.recipeId).populate(
-      "ratings"
-    )
+    const recipe = await Recipe.findById(req.params.recipeId)
+      .populate("user", "username email image") // Add this to populate user info
+      .populate("ratings")
     res.status(200).send(recipe)
   } catch (error) {
     res.status(500).send({ msg: "Error fetching recipe!", error })
@@ -97,6 +100,9 @@ exports.createRecipe = async (req, res) => {
       user: userId,
     })
 
+    // Populate user info before sending response
+    await newRecipe.populate("user", "username email image")
+
     res.json(newRecipe)
   } catch (error) {
     res.status(500).send({ msg: "Error creating new recipe!", error })
@@ -119,6 +125,8 @@ exports.updateRecipe = async (req, res) => {
       req.body,
       { new: true }
     )
+      .populate("user", "username email image") // Add this
+      .populate("ratings")
     res.status(200).send(recipe)
   } catch (error) {
     res.status(500).send({ msg: "Error updating the recipe!", error })
