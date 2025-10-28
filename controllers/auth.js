@@ -171,7 +171,16 @@ const CheckSession = async (req, res) => {
   const currentUser = await user
     .findById(payload.id)
     .select("username email image gender")
-  res.status(200).send(currentUser)
+
+  const userData = {
+    id: currentUser._id,
+    username: currentUser.username,
+    email: currentUser.email,
+    image: currentUser.image,
+    gender: currentUser.gender,
+  }
+
+  res.status(200).send(userData)
 }
 
 const ForgetPassword = async (req, res) => {
