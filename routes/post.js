@@ -9,8 +9,6 @@ const upload = require("../middleware/upload")
 router.get("/", stripToken, verifyToken, post.getAllPosts)
 // Add new post
 router.post("/", stripToken, verifyToken, upload.single("image"), post.createPost)
-//Delete post
-router.delete("/:id",stripToken, verifyToken, post.deletePost)
 //Like post
 router.post("/:id/like", stripToken, verifyToken, post.likePost)
 

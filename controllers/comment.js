@@ -22,7 +22,6 @@ const addComment = async (req, res) => {
   }
 }
 
-
 //Edit comment
 const editComment = async (req, res) => {
   try {
