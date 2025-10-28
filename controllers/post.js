@@ -70,6 +70,11 @@ const deletePost=async(req,res)=>{
 //Like post
 const likePost = async (req, res) => {
   try {
+    // التحقق من وجود postId
+    if (!req.params.id) {
+      return res.status(400).send({ msg: "Post ID is required!" })
+    }
+
     const userId = res.locals.payload.id;
     const post = await Post.findById(req.params.id)
     if (!post) return res.status(404).send({ msg: "Post not found!" })
@@ -90,7 +95,8 @@ const likePost = async (req, res) => {
       likedByUser: !alreadyLiked
     })
   } catch (error) {
-    res.status(500).send({ msg: "Error liking post!", error })
+    console.error("Like post error:", error)
+    res.status(500).send({ msg: "Error liking post!", error: error.message })
   }
 }
 

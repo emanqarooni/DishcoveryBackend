@@ -9,6 +9,18 @@ exports.getRecipe = async (req, res) => {
   }
 }
 
+exports.getUserRecipes = async (req, res) => {
+  try {
+    const userId = res.locals.payload.id
+    const recipes = await Recipe.find({ user: userId })
+
+    res.status(200).send(recipes)
+  } catch (error) {
+    res.status(500).send({ msg: "Error fetching user recipes!", error })
+  }
+}
+
+
 exports.getDetails = async (req, res) => {
   try {
     const recipe = await Recipe.findById(req.params.recipeId).populate(
