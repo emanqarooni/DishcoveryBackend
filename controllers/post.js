@@ -6,10 +6,10 @@ const path = require("path")
 const getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find({})
-      .populate("owner", "username email")
+      .populate("owner", "username email image")
       .populate({
         path: "comments",
-        populate: { path: "owner", select: "username email _id" },
+        populate: { path: "owner", select: "username email _id image" },
       })
 
     const userId = res.locals.payload?.id
@@ -52,10 +52,10 @@ const createPost = async (req, res) => {
     })
 
     const populatedPost = await Post.findById(newPost._id)
-      .populate("owner", "username email")
+      .populate("owner", "username email image")
       .populate({
         path: "comments",
-        populate: { path: "owner", select: "username email _id" },
+        populate: { path: "owner", select: "username email _id image" },
       })
 
     res.status(200).send(populatedPost)
