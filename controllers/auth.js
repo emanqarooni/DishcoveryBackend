@@ -95,6 +95,7 @@ const Login = async (req, res) => {
         id: findUser._id,
         username: findUser.username,
         email: findUser.email,
+        image: findUser.image,
       }
       // Creates our JWT and packages it with our payload to send as a response
       let token = middleware.createToken(payload)
@@ -167,7 +168,10 @@ const UpdatePassword = async (req, res) => {
 
 const CheckSession = async (req, res) => {
   const { payload } = res.locals
-  res.status(200).send(payload)
+  const currentUser = await user
+    .findById(payload.id)
+    .select("username email image gender")
+  res.status(200).send(currentUser)
 }
 
 const ForgetPassword = async (req, res) => {
