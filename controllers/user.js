@@ -5,7 +5,6 @@ const getUserProfile = async (req, res) => {
   try {
     const { userId } = req.params
 
-    //get user info excluding sensitive data
     const user = await User.findById(userId).select(
       "-password -resetPasswordToken -resetPasswordExpires"
     )
@@ -14,7 +13,6 @@ const getUserProfile = async (req, res) => {
       return res.status(404).json({ error: "User not found" })
     }
 
-    //get all recipes favorited by this user and include recipe owner info
     const favoritedRecipes = await Recipe.find({
       favouritedByUsers: userId,
     }).populate("owner", "username email image")
@@ -53,29 +51,51 @@ const getEditUserProfile = async (req, res) => {
 const updateUserProfile = async (req, res) => {
   try {
     const { userId } = req.params
-    const { username, gender, email } = req.body
+    const { username, email, gender } = req.body
 
     let user = await User.findById(userId)
     if (!user) {
       return res.status(404).json({ error: "User not found" })
     }
 
-    //check if email exist
+    //validate Gmail address
+    const emailVal = /^[a-zA-Z0-9._%+-]+@gmail\.com$/
+    if (email && !emailVal.test(email)) {
+      return res
+        .status(400)
+        .json({ error: "Please enter a valid Gmail address." })
+    }
+
+    //check if email already used by another user
     if (email && email !== user.email) {
-      const existingUser = await User.findOne({ email })
-      if (existingUser) {
+      const existingEmail = await User.findOne({ email })
+      if (existingEmail) {
         return res.status(400).json({ error: "Email is already in use" })
       }
       user.email = email
     }
 
-    //update image if user upload
+    //check if username already used by another user
+    if (username && username !== user.username) {
+      const existingUsername = await User.findOne({ username })
+      if (existingUsername) {
+        return res.status(400).json({ error: "Username is already taken" })
+      }
+      user.username = username
+    }
+
+    //validate and update image
     let imagePath = user.image
     if (req.file) {
+      const validTypes = ["image/jpeg", "image/png", "image/jpg", "image/webp"]
+      if (!validTypes.includes(req.file.mimetype)) {
+        return res.status(400).json({
+          error: "Invalid image format. Only JPEG, PNG, or WEBP allowed.",
+        })
+      }
       imagePath = `/uploads/${req.file.filename}`
     }
 
-    user.username = username || user.username
     user.gender = gender || user.gender
     user.image = imagePath
 
