@@ -15,7 +15,7 @@ const getUserProfile = async (req, res) => {
 
     const favoritedRecipes = await Recipe.find({
       favouritedByUsers: userId,
-    }).populate("owner", "username email image")
+    }).populate("user", "username email image")
 
     res.status(200).json({
       user,
