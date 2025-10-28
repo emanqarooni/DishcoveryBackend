@@ -73,8 +73,28 @@ const deleteComment = async (req, res) => {
   }
 }
 
+const addReply = async (req, res) => {
+  try {
+    const comment = await Comment.findById(req.params.id)
+    if (!comment) return res.status(404).json({ msg: "Comment not found" })
+
+    const reply = {
+      owner: req.user.id,
+      comment: req.body.comment,
+    }
+
+    comment.replies.push(reply)
+    await comment.save()
+
+    res.status(200).json(comment)
+  } catch (error) {
+    res.status(500).json({ msg: "Error adding reply", error })
+  }
+}
+
 module.exports = {
   addComment,
   editComment,
   deleteComment,
+  addReply,
 }
