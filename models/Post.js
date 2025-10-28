@@ -29,10 +29,15 @@ const postSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Rating",
     },
+    challengeMonth:{
+      type:String,
+      required:true,
+    },
   },
   {
     timestamps: true, //createdAt, updatedAt
   }
 )
+
 const Post = mongoose.model("Post", postSchema)
 module.exports = Post
