@@ -10,5 +10,7 @@ router.post("/",stripToken, verifyToken,comment.addComment)
 router.put("/:id",stripToken, verifyToken,comment.editComment)
 //Delete a comment
 router.delete("/:id", stripToken, verifyToken, comment.deleteComment)
+//Reply a comment
+router.post("/:id/reply", stripToken, verifyToken, comment.addReply)
 
 module.exports=router
