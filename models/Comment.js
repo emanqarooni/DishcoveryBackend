@@ -15,6 +15,7 @@ const commentSchema = new mongoose.Schema(
       ref: "Post",
       required: true,
     },
+     replies: [replySchema],
   },
   {
     timestamps: true, //createdAt, updatedAt
