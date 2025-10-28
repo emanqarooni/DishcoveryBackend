@@ -73,24 +73,32 @@ const deleteComment = async (req, res) => {
   }
 }
 
+//Add reply
 const addReply = async (req, res) => {
   try {
     const comment = await Comment.findById(req.params.id)
     if (!comment) return res.status(404).json({ msg: "Comment not found" })
 
+    const userId = res.locals.payload.id
     const reply = {
-      owner: req.user.id,
+      owner: userId,
       comment: req.body.comment,
     }
 
     comment.replies.push(reply)
     await comment.save()
 
-    res.status(200).json(comment)
+    const populated = await Comment.findById(comment._id)
+      .populate("owner", "username email")
+      .populate("replies.owner", "username email")
+
+    res.status(200).json(populated)
   } catch (error) {
-    res.status(500).json({ msg: "Error adding reply", error })
+    console.error("Error adding reply:", error)
+    res.status(500).json({ msg: "Error adding reply", error: error.message })
   }
 }
+
 
 module.exports = {
   addComment,

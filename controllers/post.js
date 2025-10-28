@@ -64,7 +64,6 @@ const createPost = async (req, res) => {
   }
 }
 
-
 //Like post
 const likePost = async (req, res) => {
   try {
