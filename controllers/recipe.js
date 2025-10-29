@@ -3,8 +3,9 @@ const Recipe = require("../models/Recipe")
 exports.getRecipe = async (req, res) => {
   try {
     const recipe = await Recipe.find({})
-      .populate("user", "username email image") // Add this to populate user info
+      .populate("user", "username email image")
       .populate("ratings")
+      .sort({ _id: -1 }) // Add this line to sort by newest first
     res.status(200).send(recipe)
   } catch (error) {
     res.status(500).send({ msg: "Error fetching recipe!", error })
@@ -15,8 +16,9 @@ exports.getUserRecipes = async (req, res) => {
   try {
     const userId = res.locals.payload.id
     const recipes = await Recipe.find({ user: userId })
-      .populate("user", "username email image") // Add this
+      .populate("user", "username email image")
       .populate("ratings")
+      .sort({ _id: -1 }) // Add this line to sort by newest first
 
     res.status(200).send(recipes)
   } catch (error) {
