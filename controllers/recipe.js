@@ -5,7 +5,7 @@ exports.getRecipe = async (req, res) => {
     const recipe = await Recipe.find({})
       .populate("user", "username email image")
       .populate("ratings")
-      .sort({ _id: -1 }) // Add this line to sort by newest first
+      .sort({ _id: -1 })
     res.status(200).send(recipe)
   } catch (error) {
     res.status(500).send({ msg: "Error fetching recipe!", error })
@@ -18,7 +18,7 @@ exports.getUserRecipes = async (req, res) => {
     const recipes = await Recipe.find({ user: userId })
       .populate("user", "username email image")
       .populate("ratings")
-      .sort({ _id: -1 }) // Add this line to sort by newest first
+      .sort({ _id: -1 })
 
     res.status(200).send(recipes)
   } catch (error) {
@@ -29,7 +29,7 @@ exports.getUserRecipes = async (req, res) => {
 exports.getDetails = async (req, res) => {
   try {
     const recipe = await Recipe.findById(req.params.recipeId)
-      .populate("user", "username email image") // Add this to populate user info
+      .populate("user", "username email image") 
       .populate("ratings")
     res.status(200).send(recipe)
   } catch (error) {
@@ -102,7 +102,6 @@ exports.createRecipe = async (req, res) => {
       user: userId,
     })
 
-    // Populate user info before sending response
     await newRecipe.populate("user", "username email image")
 
     res.json(newRecipe)
@@ -127,7 +126,7 @@ exports.updateRecipe = async (req, res) => {
       req.body,
       { new: true }
     )
-      .populate("user", "username email image") // Add this
+      .populate("user", "username email image")
       .populate("ratings")
     res.status(200).send(recipe)
   } catch (error) {
