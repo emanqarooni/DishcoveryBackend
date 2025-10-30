@@ -15,5 +15,25 @@
     "multer": "^2.0.2",
     "nodemailer": "^7.0.10",
     "path": "^0.12.7"
-  }
+  },
+  "name": "dishcoverybackend",
+  "version": "1.0.0",
+  "description": "---",
+  "main": "server.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emanqarooni/DishcoveryBackend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/emanqarooni/DishcoveryBackend/issues"
+  },
+  "homepage": "https://github.com/emanqarooni/DishcoveryBackend#readme"
 }
